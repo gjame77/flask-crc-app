@@ -1,0 +1,27 @@
+name: Deploy to CRC
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v3
+
+    - name: Build Docker image
+      run: docker build -t flask-crc-app .
+
+    - name: Login to OpenShift
+      run: |
+        oc login --token=${{ secrets.OPENSHIFT_TOKEN }} --server=${{ secrets.OPENSHIFT_SERVER }}
+
+    - name: Deploy to CRC
+      run: |
+        oc project myproject
+        oc delete all -l app=flask-app || true
+        oc new-app flask-crc-app --name=flask-app
+        oc expose svc/flask-app
