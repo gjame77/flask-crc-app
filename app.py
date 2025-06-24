@@ -7,9 +7,3 @@ def hello():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
-#hello1
-#hello2
-#hello3
-#hello4
-#hello5
-#hello6
